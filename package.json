@@ -1,34 +1,23 @@
 {
-  "name": "ultimate-ai-cloud-frontend",
+  "name": "cloud-storage-backend",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
-  "type": "module",  
-"dependencies": {
-    "axios": "^1.5.0",
+  "scripts": {
+    "start": "node server.js",
+    "client": "npm --prefix frontend start",
+    "dev": "concurrently \"npm run start\" \"npm run client\""
+  },
+  "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "lucide-react": "^0.292.0",
     "mongoose": "^9.2.0",
-    "multer": "^2.0.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "recharts": "^2.10.0"
+    "multer": "^2.0.2"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead"
-    ],
-    "development": [
-      "last 1 chrome version"
-    ]
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
