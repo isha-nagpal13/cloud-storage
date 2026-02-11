@@ -7,6 +7,14 @@ import jwt from "jsonwebtoken";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+// this creates an upload file locally later swtitch to aws
+const uploadsPath = path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath);
+  console.log("📁 Created uploads directory");
+}
+
 
 dotenv.config();
 
