@@ -14,11 +14,8 @@ This frontend features:
 ## 🚀 QUICK START:
 
 ```bash
-# Install
-npm install
-
-# Run
-npm start
+# Run in the directory
+npm run dev
 ```
 
 Opens at: **http://localhost:3000**
