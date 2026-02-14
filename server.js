@@ -47,7 +47,12 @@ const fileSchema = new mongoose.Schema({
   size: Number,
   mimetype: String,
   userId: mongoose.Schema.Types.ObjectId,
-  uploadedAt: { type: Date, default: Date.now }
+  uploadedAt: { type: Date, default: Date.now },
+
+  embedding: {
+    type: [Number],
+    default: []
+  }
 });
 
 const User = mongoose.model("User", userSchema);
@@ -186,6 +191,29 @@ app.delete("/api/files/:id", authMiddleware, async (req, res) => {
   await file.deleteOne();
 
   res.json({ success: true });
+});
+
+// ============================
+// Simple Search
+// ============================
+
+app.post("/api/search", authMiddleware, async (req, res) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return res.json({ results: [] });
+  }
+
+  try {
+    const files = await File.find({
+      userId: req.userId,
+      originalName: { $regex: query, $options: "i" }
+    });
+
+    res.json({ results: files });
+  } catch (err) {
+    res.status(500).json({ error: "Search failed" });
+  }
 });
 
 // ============================

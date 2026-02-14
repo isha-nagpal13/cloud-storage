@@ -169,20 +169,24 @@ function App() {
     }
   };
 
-  const handleDelete = async (fileId) => {
-    if (!window.confirm('Delete this file?')) return;
+const handleDelete = async (fileId) => {
+  if (!window.confirm('Delete this file?')) return;
 
-    try {
-      await axios.delete(`${API_URL}/files/${fileId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  try {
+    await axios.delete(`${API_URL}/files/${fileId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-      setSuccess('✅ File deleted');
-      fetchFiles();
-    } catch (error) {
-      setError('Delete failed');
-    }
-  };
+    // Immediately remove from UI
+    setFiles(prevFiles =>
+      prevFiles.filter(file => file._id !== fileId)
+    );
+
+    setSuccess('✅ File deleted');
+  } catch (error) {
+    setError('Delete failed');
+  }
+};
 
   // ============================================
   // AI FUNCTIONS
@@ -210,33 +214,26 @@ function App() {
     }
   };
 
-  const handleSmartSearch = async () => {
-    if (!searchQuery) {
-      setSearchResults([]);
-      return;
-    }
+const handleSmartSearch = async () => {
+  if (!searchQuery.trim()) {
+    setSearchResults([]);
+    return;
+  }
 
-    try {
-      const response = await axios.post(`${AI_URL}/smart-search`, {
-        query: searchQuery,
-        files: files.map(f => ({
-          _id: f._id,
-          originalName: f.originalName,
-          mimetype: f.mimetype,
-          size: f.size,
-          accessCount: f.accessCount,
-          lastAccessed: f.lastAccessed,
-          tags: f.tags || []
-        }))
-      });
+  try {
+    const response = await axios.post(
+      `${API_URL}/search`,
+      { query: searchQuery },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      if (response.data.success) {
-        setSearchResults(response.data.results);
-      }
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-  };
+    setSearchResults(response.data.results);
+  } catch (error) {
+    console.error("Search error:", error);
+    setError("Search failed");
+  }
+};
+
 
   const checkDuplicates = async () => {
     try {
